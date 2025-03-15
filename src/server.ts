@@ -17,14 +17,14 @@ async function main() {
   try {
     await mongoose.connect(config.database_url as string);
     defaultTask();
-    server = app.listen(Number(config.port), config.ip as string, () => {
+    server = app.listen(Number(config.port), () => {
       //@ts-ignore
-      console.log(`app is listening on ${config.ip}:${config.port}`.green.bold);
+      console.log(`app is listening on ${config.port}`.green.bold);
     });
     io.listen(Number(config.socket_port));
     console.log(
       //@ts-ignore
-      `Socket is listening on port ${config.ip}:${config.socket_port}`.yellow
+      `Socket is listening on port ${config.socket_port}`.yellow
         .bold,
     );
 
