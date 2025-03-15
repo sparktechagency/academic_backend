@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Event Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #333;
+      }
+      p {
+        color: #555;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        background: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>New Event: {{title}}</h2>
+      <p><strong>Start Date:</strong> {{institution}}</p>
+      <p><strong>End Date:</strong> {{job_description}}</p>
+      <p><strong>Organizer:</strong> {{location}}</p>
+      <p>Click below to view more details:</p>
+      <a href="{{url}}" class="button">View Event</a>
+    </div>
+  </body>
+</html>

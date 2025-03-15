@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Send Invitation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f9;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 2rem;
+        color: #333;
+      }
+      p {
+        color: #555;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Invitation For You</h1>
+      <p>Click the button below to sign up and send the invitation:</p>
+      <button
+        onclick="window.location.href='http://192.168.10.133:3000/signUp'"
+      >
+        Accept Invitation
+      </button>
+    </div>
+  </body>
+</html>

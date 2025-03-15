@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Grant Available</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: #007bff;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-size: 20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        padding: 20px;
+        font-size: 16px;
+        color: #333;
+      }
+      .button {
+        display: block;
+        width: 200px;
+        margin: 20px auto;
+        text-align: center;
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+      .footer {
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">🎉 New Grant Opportunity Available!</div>
+      <div class="content">
+        <p>Hello,</p>
+        <p>A new grant has been posted that you might be interested in:</p>
+        <ul>
+          <li><strong>Grant Name:</strong> {{name}}</li>
+          <li><strong>Type:</strong> {{type}}</li>
+          <li><strong>Amount:</strong> ${{amount}}</li>
+          <li><strong>Deadline:</strong> {{application_deadline}}</li>
+        </ul>
+        <p>Click below to view more details and apply:</p>
+        <a class="button" href="{{url}}" target="_blank">View Grant</a>
+      </div>
+      <div class="footer">
+        <p>
+          You're receiving this email because you're subscribed to our updates.
+        </p>
+        <p>
+          <a href="#">Unsubscribe</a> if you no longer wish to receive
+          notifications.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
