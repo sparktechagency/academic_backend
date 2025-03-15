@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.subscriberRoutes = void 0;
+const express_1 = require("express");
+const subscriber_controller_1 = require("./subscriber.controller");
+const router = (0, express_1.Router)();
+router.post('/create-subscriber', subscriber_controller_1.subscriberController.createsubscriber);
+// router.patch('/update/:id', subscriberController.updatesubscriber);
+// router.delete('/:id', subscriberController.deletesubscriber);
+// router.get('/:id', subscriberController.getsubscriber);
+// router.get('/', subscriberController.getsubscriber);
+exports.subscriberRoutes = router;

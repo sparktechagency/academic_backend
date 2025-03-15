@@ -10,7 +10,7 @@ const storage = memoryStorage();
 const upload = multer({ storage });
 router.post(
   '/create-imageUpload',
-  auth(USER_ROLE.admin, USER_ROLE.member, USER_ROLE.administrator),
+  auth(USER_ROLE.admin),
   upload.fields([{ name: 'images', maxCount: 5 }]),
   parseData(),
   imageUploadController.createimageUpload,

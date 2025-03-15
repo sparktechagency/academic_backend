@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.invitationRoutes = void 0;
+const express_1 = require("express");
+const invitation_controller_1 = require("./invitation.controller");
+const router = (0, express_1.Router)();
+router.post('/create-invitation', invitation_controller_1.invitationController.createinvitation);
+router.patch('/update/:id', invitation_controller_1.invitationController.updateinvitation);
+router.delete('/:id', invitation_controller_1.invitationController.deleteinvitation);
+// router.get('/:id', invitationController.getinvitation);
+// router.get('/', invitationController.getinvitation);
+exports.invitationRoutes = router;
