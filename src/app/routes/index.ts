@@ -21,6 +21,8 @@ import { AdminRoutes } from '../modules/Admin/Admin.route';
 import { subscriberRoutes } from '../modules/subscriber/subscriber.route';
 import { invitationRoutes } from '../modules/invitation/invitation.route';
 import { calenderRoutes } from '../modules/calender/calender.route';
+import { chatRoutes } from '../modules/chat/chat.route';
+import { imageUploadRoutes } from '../modules/imageUpload/imageUpload.route';
 
 const router = Router();
 const moduleRoutes = [
@@ -107,6 +109,14 @@ const moduleRoutes = [
   {
     path: '/calender',
     route: calenderRoutes,
+  },
+  {
+    path: '/chat',
+    route: chatRoutes,
+  },
+  {
+    path: '/image',
+    route: imageUploadRoutes,
   },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));
