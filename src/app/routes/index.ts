@@ -23,6 +23,7 @@ import { invitationRoutes } from '../modules/invitation/invitation.route';
 import { calenderRoutes } from '../modules/calender/calender.route';
 import { chatRoutes } from '../modules/chat/chat.route';
 import { imageUploadRoutes } from '../modules/imageUpload/imageUpload.route';
+import { messagesRoutes } from '../modules/messages/messages.route';
 
 const router = Router();
 const moduleRoutes = [
@@ -117,6 +118,10 @@ const moduleRoutes = [
   {
     path: '/image',
     route: imageUploadRoutes,
+  },
+  {
+    path: '/message',
+    route: messagesRoutes,
   },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));

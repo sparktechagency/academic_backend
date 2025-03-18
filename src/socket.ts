@@ -13,6 +13,7 @@ import Chat from './app/modules/chat/chat.models';
 // import { callbackFn } from './app/utils/CallbackFn';
 import * as socket from './socket';
 import { callbackFn } from './app/utils/callbackFn';
+import { messagesService } from './app/modules/messages/messages.service';
 
 const initializeSocketIO = (server: HttpServer) => {
   const io = new Server(server, {
@@ -95,20 +96,20 @@ const initializeSocketIO = (server: HttpServer) => {
 
           socket.emit('message', getPreMessage || []);
 
-          // Notification
-          // const allUnReaddMessage = await Message.countDocuments({
-          //   receiver: user?._id,
-          //   seen: false,
-          // });
-          // const variable = 'new-notifications::' + user?._id;
-          // io.emit(variable, allUnReaddMessage);
+          Notification;
+          const allUnReaddMessage = await Message.countDocuments({
+            receiver: user?._id,
+            seen: false,
+          });
+          const variable = 'new-notifications::' + user?._id;
+          io.emit(variable, allUnReaddMessage);
 
-          // const allUnReaddMessage2 = await Message.countDocuments({
-          //   receiver: userId,
-          //   seen: false,
-          // });
-          // const variable2 = 'new-notifications::' + userId;
-          // io.emit(variable2, allUnReaddMessage2);
+          const allUnReaddMessage2 = await Message.countDocuments({
+            receiver: userId,
+            seen: false,
+          });
+          const variable2 = 'new-notifications::' + userId;
+          io.emit(variable2, allUnReaddMessage2);
 
           //end Notification//
         } catch (error: any) {
@@ -335,6 +336,12 @@ const initializeSocketIO = (server: HttpServer) => {
         }
       });
 
+      socket.on('get-unique-user', async ({}, callback) => {
+        const data = await messagesService.getMessagesByUniqueUser(user?._id);
+        const vars = 'get-message-notification::' + user?._id;
+        io.emit(vars, data);
+        callbackFn(callback, { success: true, message: data });
+      });
       //-----------------------Disconnect------------------------//
       socket.on('disconnect', () => {
         onlineUser.delete(user?._id?.toString());
