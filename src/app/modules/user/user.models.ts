@@ -124,6 +124,9 @@ const userSchema: Schema<IUser> = new Schema(
     about: {
       type: String,
     },
+    areaOfResearch: {
+      type: String,
+    },
   },
   {
     timestamps: true,

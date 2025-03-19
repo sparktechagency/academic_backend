@@ -19,6 +19,9 @@ const ArticleSchema: Schema<Iarticle> = new Schema(
       type: String,
       // required: true,
     },
+    url: {
+      type: String,
+    },
     keywords: {
       type: [String],
       required: true,

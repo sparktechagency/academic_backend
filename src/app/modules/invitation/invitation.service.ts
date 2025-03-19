@@ -9,33 +9,21 @@ import fs from 'fs';
 
 const createinvitation = async (data: Iinvitation) => {
   const invitations = await invitation.create(data);
-  const invites = await invitation.find();
-
-  const emailTemplatePath = path.join(
+  const otpEmailPath = path.join(
     __dirname,
     '../../../../public/view/invite_mail.html',
   );
 
-  if (!fs.existsSync(emailTemplatePath)) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Email template not found',
-    );
-  }
+  let emailTemplate = fs.readFileSync(otpEmailPath, 'utf8');
 
-  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
-
-  const emailContent = emailTemplate;
-  const limit = pLimit(10);
-  const emailTasks = invites.map(invite => {
-    if (invite.email) {
-      return limit(() =>
-        sendEmail(invite.email, 'Event Post Available', emailContent),
-      );
-    }
-    return Promise.resolve();
-  });
-  await Promise.all(emailTasks);
+  // Replace placeholders in the template
+  emailTemplate = emailTemplate.replace('{{email}}', invitations.email);
+  // Send the email
+  await sendEmail(
+    invitations.email,
+    'Invitation to Join PhDPort',
+    emailTemplate,
+  );
 
   return invitations;
 };

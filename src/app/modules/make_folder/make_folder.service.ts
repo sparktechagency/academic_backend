@@ -1,3 +1,4 @@
+import Article from '../article/article.models';
 import { IMake_Folder } from './make_folder.interface';
 import MakeFolder from './make_folder.models';
 
@@ -36,6 +37,7 @@ const updatemake_folder = async (id: string, isPrivate: boolean) => {
 // Delete Make Folder
 const deletemake_folder = async (id: string) => {
   const deletedFolder = await MakeFolder.findByIdAndDelete(id);
+  const deletedArticles = await Article.deleteMany({ folderId: id });
   return deletedFolder;
 };
 

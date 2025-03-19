@@ -35,6 +35,7 @@ export interface IUser {
   lastName: string;
   languages: string[];
   about: string;
+  areaOfResearch: string;
 }
 
 export interface UserModel extends Model<IUser> {

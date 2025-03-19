@@ -295,7 +295,9 @@ const initializeSocketIO = (server: HttpServer) => {
         });
         const variable2 = 'new-notifications::' + result.receiver;
         io.emit(variable2, allUnReaddMessage2);
-
+        const data = await messagesService.getMessagesByUniqueUser(user?._id);
+        const vars = 'get-message-notification::' + user?._id;
+        io.emit(vars, data);
         //end Notification//
         callbackFn(callback, {
           statusCode: httpStatus.OK,

@@ -17,7 +17,9 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
       fileName: `images/user/profile/${Math.floor(100000 + Math.random() * 900000)}`,
     });
   }
-  req.body.name = req.body.firstName + ' ' + req.body.lastName;
+  req.body.name = `${req.body.firstName} ${req.body.lastName}`;
+  // req.body.name = req.body.firstName + ' ' + req.body.lastName;
+
   const result = await userService.createUser(req.body);
   const sendOtp = await otpServices.resendOtp(result?.email);
   sendResponse(res, {
@@ -66,8 +68,9 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
       fileName: `images/user/profile/${Math.floor(100000 + Math.random() * 900000)}`,
     });
   }
-  req.body.name = req.body.firstName + ' ' + req.body.lastName;
+  // req.body.name = req.body.firstName + ' ' + req.body.lastName;
   // Call the service to update the user
+  req.body.name = `${req.body.firstName} ${req.body.lastName}`;
   const updatedUser = await userService.updateUser(req.params.id, req.body);
 
   // Respond with the updated user data
@@ -87,9 +90,12 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
       fileName: `images/user/profile/${Math.floor(100000 + Math.random() * 900000)}`,
     });
   }
-  req.body.name = req.body.firstName + ' ' + req.body.lastName;
+  // req.body.name = req.body.firstName + ' ' + req.body.lastName;
+  req.body.name = `${req.body.firstName} ${req.body.lastName}`;
+  console.log('req.body', req.body.name);
 
   const result = await userService.updateUser(req?.user?.userId, req.body);
+  console.log('result', result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
