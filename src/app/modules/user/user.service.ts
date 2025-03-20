@@ -10,6 +10,7 @@ import { paginationFields } from '../../constants/pagination';
 import { userSearchableFields } from './user.constants';
 import mongoose, { Types } from 'mongoose';
 import { paginationHelper } from '../../helpers/pagination.helpers';
+import invitation from '../invitation/invitation.models';
 
 export type IFilter = {
   searchTerm?: string;
@@ -17,30 +18,36 @@ export type IFilter = {
   [key: string]: any;
 };
 const createUser = async (payload: IUser): Promise<IUser> => {
-  const isExist = await User.isUserExist(payload.email as string);
+  const invited = await invitation.findOne({
+    email: payload.email as string,
+  });
+  if (invited) {
+    const isExist = await User.isUserExist(payload.email as string);
 
-  if (isExist) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      'User already exists with this email',
-    );
-  }
+    if (isExist) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        'User already exists with this email',
+      );
+    }
 
-  if (payload?.isGoogleLogin) {
-    payload.verification = {
-      otp: 0,
-      expiresAt: new Date(Date.now()),
-      status: true,
-    };
+    if (payload?.isGoogleLogin) {
+      payload.verification = {
+        otp: 0,
+        expiresAt: new Date(Date.now()),
+        status: true,
+      };
+    }
+    if (!payload.isGoogleLogin && !payload.password) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Password is required');
+    }
+    const user = await User.create(payload);
+    if (!user) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'User creation failed');
+    }
+    return user;
   }
-  if (!payload.isGoogleLogin && !payload.password) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Password is required');
-  }
-  const user = await User.create(payload);
-  if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User creation failed');
-  }
-  return user;
+  throw new AppError(httpStatus.BAD_REQUEST, 'Invitation not found');
 };
 
 // const getAllUser = async (query: Record<string, any>) => {
@@ -140,17 +147,17 @@ const getAllUser = async (query: Record<string, any>) => {
   const { page, limit, skip, sort } =
     paginationHelper.calculatePagination(paginationOptions);
 
-  if (sort) {
-    const sortArray = sort.split(',').map(field => {
-      const trimmedField = field.trim();
-      if (trimmedField.startsWith('-')) {
-        return { [trimmedField.slice(1)]: -1 };
-      }
-      return { [trimmedField]: 1 };
-    });
+  const sortArray = sort
+    ? sort.split(',').map(field => {
+        const trimmedField = field.trim();
+        if (trimmedField.startsWith('-')) {
+          return { [trimmedField.slice(1)]: -1 };
+        }
+        return { [trimmedField]: 1 };
+      })
+    : [{ name: 1 }]; // Default sort alphabetically by 'name'
 
-    pipeline.push({ $sort: Object.assign({}, ...sortArray) });
-  }
+  pipeline.push({ $sort: Object.assign({}, ...sortArray) });
 
   pipeline.push({
     $facet: {
