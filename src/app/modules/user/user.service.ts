@@ -147,21 +147,13 @@ const getAllUser = async (query: Record<string, any>) => {
   const { page, limit, skip, sort } =
     paginationHelper.calculatePagination(paginationOptions);
 
-  const sortArray = sort
-    ? sort.split(',').map(field => {
-        const trimmedField = field.trim();
-        if (trimmedField.startsWith('-')) {
-          return { [trimmedField.slice(1)]: -1 };
-        }
-        return { [trimmedField]: 1 };
-      })
-    : [{ firstName: 1 }]; // Default sort alphabetically by 'name'
+  const sortArray = [{ firstName: 1 }];
 
   pipeline.push({ $sort: Object.assign({}, ...sortArray) });
 
   pipeline.push({
     $facet: {
-      totalData: [{ $count: 'total' }], // Count total documents after filters
+      totalData: [{ $count: 'total' }],
       paginatedData: [{ $skip: skip }, { $limit: limit }],
     },
   });
