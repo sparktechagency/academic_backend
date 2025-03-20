@@ -155,7 +155,7 @@ const getAllUser = async (query: Record<string, any>) => {
         }
         return { [trimmedField]: 1 };
       })
-    : [{ name: 1 }]; // Default sort alphabetically by 'name'
+    : [{ firstName: 1 }]; // Default sort alphabetically by 'name'
 
   pipeline.push({ $sort: Object.assign({}, ...sortArray) });
 
