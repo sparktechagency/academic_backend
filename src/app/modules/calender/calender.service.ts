@@ -7,6 +7,7 @@ import JobPostFavourite from '../jobpost_favourite/jobpost_favourite.models';
 import GrantsFavourite from '../grants_favourite/grants_favourite.models';
 import JobPost from '../jobPost/jobPost.models';
 import Grants from '../grants/grants.models';
+import { url } from 'inspector';
 
 const getUserFavouriteCalendar = async (userId: string) => {
   // Fetch all user favourites
@@ -30,31 +31,48 @@ const getUserFavouriteCalendar = async (userId: string) => {
 
   // Fetch actual data from related collections
   const [events, callForPapers, jobPosts, grants] = await Promise.all([
-    Event.find({ _id: { $in: eventIds } }, { event_end_date: 1 }),
+    Event.find(
+      { _id: { $in: eventIds } },
+      { event_end_date: 1, title: 1, url: 1 },
+    ),
     CallForPaper.find(
       { _id: { $in: callForPaperIds } },
-      { abstract_submission_deadline: 1 },
+      { abstract_submission_deadline: 1, title: 1, url: 1 },
     ),
-    JobPost.find({ _id: { $in: jobPostIds } }, { application_deadline: 1 }),
-    Grants.find({ _id: { $in: grantsIds } }, { application_deadline: 1 }),
+    JobPost.find(
+      { _id: { $in: jobPostIds } },
+      { application_deadline: 1, title: 1, url: 1 },
+    ),
+    Grants.find(
+      { _id: { $in: grantsIds } },
+      { application_deadline: 1, name: 1, url: 1 },
+    ),
   ]);
 
   return {
     events: events.map(event => ({
       eventId: event._id,
       event_end_date: event.event_end_date,
+      title: event.title,
+      url: event.url,
     })),
     callForPapers: callForPapers.map(callForPaper => ({
       callForPaperId: callForPaper._id,
       abstract_submission_deadline: callForPaper.abstract_submission_deadline,
+      callForPaper_title: callForPaper.title,
+      url: callForPaper.url,
     })),
     jobPosts: jobPosts.map(jobPost => ({
       jobPostId: jobPost._id,
       job_deadline: jobPost.application_deadline,
+      jobPost_title: jobPost.title,
+      url: jobPost.url,
     })),
     grants: grants.map(grant => ({
       grantsId: grant._id,
       grant_deadline: grant.application_deadline,
+      grant_title: grant.name,
+      url: grant.url,
     })),
   };
 };
