@@ -4,50 +4,101 @@ import { Igrants } from './grants.interface';
 import Grants from './grants.models';
 import httpStatus from 'http-status';
 import AppError from '../../error/AppError';
-// import QueryBuilder from '../../builder/QueryBuilder';
-// import { Icontact } from './contact.interface';
-// import { contactController } from './contact.controller';
-// import contact from './contact.models';
 import path from 'path';
-// import { sendEmail } from '../../utils/mailSender';
-// import { User } from '../user/user.models';
 import fs from 'fs';
 import subscriber from '../subscriber/subscriber.models';
 import { sendEmail } from '../../utils/mailSender';
 import pLimit from 'p-limit';
+import { User } from '../user/user.models';
+import dayjs from 'dayjs';
+import * as cron from 'node-cron';
+import { sendDailyJobPostUpdate } from '../jobPost/jobPost.service';
+import { sendDailyEventUpdate } from '../event/event.service';
+
+// const creategrants = async (grantData: Igrants) => {
+//   const grants = await Grants.create(grantData);
+//   const subscribers = await subscriber.find({ isSubscribed: true });
+//   const emailTemplatePath = path.join(
+//     __dirname,
+//     '../../../../public/view/grants_mail.html',
+//   );
+//   if (!fs.existsSync(emailTemplatePath)) {
+//     throw new AppError(
+//       httpStatus.INTERNAL_SERVER_ERROR,
+//       'Email template not found',
+//     );
+//   }
+//   const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+//   const emailContent = emailTemplate
+//     .replace('{{name}}', grantData.name)
+//     .replace('{{url}}', grantData.url)
+//     .replace('{{type}}', grantData.type)
+//     .replace('{{amount}}', grantData.amount)
+//     .replace('{{application_deadline}}', grantData.application_deadline);
+//   const limit = pLimit(10);
+//   const emailTasks = subscribers.map(subscriber => {
+//     if (subscriber.email) {
+//       return limit(() =>
+//         sendEmail(subscriber.email, 'New Job Post Available', emailContent),
+//       );
+//     }
+//     return Promise.resolve();
+//   });
+
+//   await Promise.all(emailTasks);
+//   return grants;
+// };
 
 const creategrants = async (grantData: Igrants) => {
   const grants = await Grants.create(grantData);
-  const subscribers = await subscriber.find({ isSubscribed: true });
+  return grants;
+};
+
+const sendDailyGrantUpdate = async () => {
+  const now = dayjs();
+  const yesterday = now.subtract(1, 'day').toDate();
+
+  const newGrants = await Grants.find({ createdAt: { $gte: yesterday } });
+  const memberCount = await User.countDocuments({
+    createdAt: { $gte: yesterday },
+  });
+  const grantCount = newGrants.length;
+
+  if (grantCount === 0 && memberCount === 0) return; // Skip email if no updates
+
   const emailTemplatePath = path.join(
     __dirname,
     '../../../../public/view/grants_mail.html',
   );
+
   if (!fs.existsSync(emailTemplatePath)) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Email template not found',
-    );
+    throw new Error('Email template not found');
   }
-  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
-  const emailContent = emailTemplate
-    .replace('{{name}}', grantData.name)
-    .replace('{{url}}', grantData.url)
-    .replace('{{type}}', grantData.type)
-    .replace('{{amount}}', grantData.amount)
-    .replace('{{application_deadline}}', grantData.application_deadline);
+
+  const rawTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  const subscribersList = await subscriber.find({ isSubscribed: true });
+
   const limit = pLimit(10);
-  const emailTasks = subscribers.map(subscriber => {
-    if (subscriber.email) {
+  const tasks = subscribersList.map(sub => {
+    if (sub.email) {
+      const content = rawTemplate
+        .replace('{{first_name}}', sub.email.split('@')[0] || 'there')
+        .replace('{{today_date}}', now.format('MMMM D, YYYY'))
+        .replace('{{member_count}}', String(memberCount))
+        .replace('{{job_count}}', String(grantCount));
+
       return limit(() =>
-        sendEmail(subscriber.email, 'New Job Post Available', emailContent),
+        sendEmail(
+          sub.email,
+          `Your ${now.format('MMMM D')} update from PhDPort`,
+          content,
+        ),
       );
     }
     return Promise.resolve();
   });
 
-  await Promise.all(emailTasks);
-  return grants;
+  await Promise.all(tasks);
 };
 
 const getAllgrants = async (query: Record<string, any>) => {
@@ -125,6 +176,13 @@ const getgrantsByUserId = async (
   };
 };
 
+cron.schedule('0 9 * * *', () => {
+  console.log('Running daily grant update...');
+  sendDailyGrantUpdate().catch(console.error);
+  sendDailyJobPostUpdate().catch(console.error);
+  sendDailyEventUpdate().catch(console.error);
+});
+
 export const grantsService = {
   creategrants,
   getAllgrants,
@@ -133,4 +191,5 @@ export const grantsService = {
   deletegrants,
   getMygrantsById,
   getgrantsByUserId,
+  sendDailyGrantUpdate,
 };

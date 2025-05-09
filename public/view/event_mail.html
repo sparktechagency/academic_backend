@@ -1,48 +1,32 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Event Notification</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        padding: 20px;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      h2 {
-        color: #333;
-      }
-      p {
-        color: #555;
-      }
-      .button {
-        display: inline-block;
-        padding: 10px 20px;
-        color: #fff;
-        background: #007bff;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-top: 15px;
-      }
-    </style>
+    ...
   </head>
   <body>
-    <div class="container">
-      <h2>New Event: {{title}}</h2>
-      <p><strong>Start Date:</strong> {{institution}}</p>
-      <p><strong>End Date:</strong> {{job_description}}</p>
-      <p><strong>Organizer:</strong> {{location}}</p>
-      <p>Click below to view more details:</p>
-      <a href="{{url}}" class="button">View Event</a>
+    <div class="email-container">
+      <div class="header">🎓 Daily Update from PhDPort</div>
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+        <p>
+          Welcome to your {{today_date}} update from PhDPort! Here's what's new
+          in our academic community over the past 24 hours.
+        </p>
+        <!-- <p><strong>Key Statistics (as of {{today_date}}):</strong></p> -->
+        <ul>
+          <li>Members: {{member_count}} new registered scholars</li>
+          <li>Event Posts: {{job_count}} new active listings</li>
+        </ul>
+        <p>
+          If you have suggestions or need help, just reply to this email. We’re
+          here to support your research journey!
+        </p>
+        <p>Best regards,<br />The PhDPort Team</p>
+        <p class="footer">
+          You’re receiving this because you signed up at PhDPort. If you’d
+          rather not get updates, you can <a href="#">unsubscribe here</a>.
+        </p>
+      </div>
     </div>
   </body>
 </html>

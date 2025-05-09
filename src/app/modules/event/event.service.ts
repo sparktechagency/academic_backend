@@ -1,22 +1,70 @@
 import Event from './event.models';
 import { Ievent } from './event.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { notificationServices } from '../notification/notification.service';
-import { USER_ROLE } from '../user/user.constants';
-import { modeType } from '../notification/notification.interface';
 import { sendEmail } from '../../utils/mailSender';
 import pLimit from 'p-limit';
-import AppError from '../../error/AppError';
-import httpStatus from 'http-status';
 import path from 'path';
 import subscriber from '../subscriber/subscriber.models';
 import fs from 'fs';
-import { Admin } from 'mongodb';
+import dayjs from 'dayjs';
 import { User } from '../user/user.models';
 
 const createevent = async (eventData: Ievent) => {
   const newEvent = await Event.create(eventData);
-  const subscribers = await subscriber.find({ isSubscribed: true });
+  // const subscribers = await subscriber.find({ isSubscribed: true });
+
+  // const emailTemplatePath = path.join(
+  //   __dirname,
+  //   '../../../../public/view/event_mail.html',
+  // );
+
+  // if (!fs.existsSync(emailTemplatePath)) {
+  //   throw new AppError(
+  //     httpStatus.INTERNAL_SERVER_ERROR,
+  //     'Email template not found',
+  //   );
+  // }
+
+  // const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+
+  // const emailContent = emailTemplate
+  //   .replace('{{title}}', eventData.title)
+  //   .replace('{{url}}', eventData.url)
+  //   .replace('{{institution}}', eventData.event_start_date)
+  //   .replace('{{job_description}}', eventData.event_end_date)
+  //   .replace('{{location}}', eventData.organizer);
+  // const limit = pLimit(10);
+  // const emailTasks = subscribers.map(subscriber => {
+  //   if (subscriber.email) {
+  //     return limit(() =>
+  //       sendEmail(subscriber.email, 'Event Post Available', emailContent),
+  //     );
+  //   }
+  //   return Promise.resolve();
+  // });
+  // await Promise.all(emailTasks);
+  // const admin = await User.findOne({ role: USER_ROLE?.admin });
+  // await notificationServices.insertNotificationIntoDb({
+  //   receiver: admin?._id,
+  //   message: 'Event Created successfully',
+  //   description: `User ${eventData.userId} has successfully created an event titled "${eventData.title}".`,
+  //   refference: newEvent._id,
+  //   model_type: modeType.Event,
+  // });
+  return newEvent;
+};
+
+export const sendDailyEventUpdate = async () => {
+  const now = dayjs();
+  const yesterday = now.subtract(1, 'day').toDate();
+
+  const newEvent = await Event.find({ createdAt: { $gte: yesterday } });
+  const memberCount = await User.countDocuments({
+    createdAt: { $gte: yesterday },
+  });
+  const eventCount = newEvent.length;
+
+  if (eventCount === 0 && memberCount === 0) return; // Skip email if no updates
 
   const emailTemplatePath = path.join(
     __dirname,
@@ -24,39 +72,33 @@ const createevent = async (eventData: Ievent) => {
   );
 
   if (!fs.existsSync(emailTemplatePath)) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Email template not found',
-    );
+    throw new Error('Email template not found');
   }
 
-  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  const rawTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  const subscribersList = await subscriber.find({ isSubscribed: true });
 
-  const emailContent = emailTemplate
-    .replace('{{title}}', eventData.title)
-    .replace('{{url}}', eventData.url)
-    .replace('{{institution}}', eventData.event_start_date)
-    .replace('{{job_description}}', eventData.event_end_date)
-    .replace('{{location}}', eventData.organizer);
   const limit = pLimit(10);
-  const emailTasks = subscribers.map(subscriber => {
-    if (subscriber.email) {
+  const tasks = subscribersList.map(sub => {
+    if (sub.email) {
+      const content = rawTemplate
+        .replace('{{first_name}}', sub.email.split('@')[0] || 'there')
+        .replace('{{today_date}}', now.format('MMMM D, YYYY'))
+        .replace('{{member_count}}', String(memberCount))
+        .replace('{{job_count}}', String(eventCount));
+
       return limit(() =>
-        sendEmail(subscriber.email, 'Event Post Available', emailContent),
+        sendEmail(
+          sub.email,
+          `Your ${now.format('MMMM D')} update from PhDPort`,
+          content,
+        ),
       );
     }
     return Promise.resolve();
   });
-  await Promise.all(emailTasks);
-  const admin = await User.findOne({ role: USER_ROLE?.admin });
-  await notificationServices.insertNotificationIntoDb({
-    receiver: admin?._id,
-    message: 'Event Created successfully',
-    description: `User ${eventData.userId} has successfully created an event titled "${eventData.title}".`,
-    refference: newEvent._id,
-    model_type: modeType.Event,
-  });
-  return newEvent;
+
+  await Promise.all(tasks);
 };
 
 const getAllevent = async (query: Record<string, any>) => {
@@ -141,4 +183,5 @@ export const eventService = {
   deleteevent,
   getMyeventById,
   getEventByUserId,
+  sendDailyEventUpdate,
 };

@@ -15,10 +15,57 @@ import { User } from '../user/user.models';
 import fs from 'fs';
 import subscriber from '../subscriber/subscriber.models';
 import pLimit from 'p-limit';
+import dayjs from 'dayjs';
 
 const createjobPost = async (data: IjobPost) => {
   const job = await JobPost.create(data);
-  const subscribers = await subscriber.find({ isSubscribed: true });
+  // const subscribers = await subscriber.find({ isSubscribed: true });
+
+  // const emailTemplatePath = path.join(
+  //   __dirname,
+  //   '../../../../public/view/jobPost_mail.html',
+  // );
+
+  // if (!fs.existsSync(emailTemplatePath)) {
+  //   throw new AppError(
+  //     httpStatus.INTERNAL_SERVER_ERROR,
+  //     'Email template not found',
+  //   );
+  // }
+
+  // const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+
+  // const emailContent = emailTemplate
+  //   .replace('{{title}}', data.title)
+  //   .replace('{{url}}', data.url)
+  //   .replace('{{institution}}', data.institution)
+  //   .replace('{{job_description}}', data.job_description)
+  //   .replace('{{location}}', data.location);
+  // const limit = pLimit(10);
+  // const emailTasks = subscribers.map(subscriber => {
+  //   if (subscriber.email) {
+  //     return limit(() =>
+  //       sendEmail(subscriber.email, 'New Job Post Available', emailContent),
+  //     );
+  //   }
+  //   return Promise.resolve();
+  // });
+  // await Promise.all(emailTasks);
+
+  return job;
+};
+
+export const sendDailyJobPostUpdate = async () => {
+  const now = dayjs();
+  const yesterday = now.subtract(1, 'day').toDate();
+
+  const newGrants = await JobPost.find({ createdAt: { $gte: yesterday } });
+  const memberCount = await User.countDocuments({
+    createdAt: { $gte: yesterday },
+  });
+  const jobpostCount = newGrants.length;
+
+  if (jobpostCount === 0 && memberCount === 0) return; // Skip email if no updates
 
   const emailTemplatePath = path.join(
     __dirname,
@@ -26,32 +73,33 @@ const createjobPost = async (data: IjobPost) => {
   );
 
   if (!fs.existsSync(emailTemplatePath)) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Email template not found',
-    );
+    throw new Error('Email template not found');
   }
 
-  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  const rawTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+  const subscribersList = await subscriber.find({ isSubscribed: true });
 
-  const emailContent = emailTemplate
-    .replace('{{title}}', data.title)
-    .replace('{{url}}', data.url)
-    .replace('{{institution}}', data.institution)
-    .replace('{{job_description}}', data.job_description)
-    .replace('{{location}}', data.location);
   const limit = pLimit(10);
-  const emailTasks = subscribers.map(subscriber => {
-    if (subscriber.email) {
+  const tasks = subscribersList.map(sub => {
+    if (sub.email) {
+      const content = rawTemplate
+        .replace('{{first_name}}', sub.email.split('@')[0] || 'there')
+        .replace('{{today_date}}', now.format('MMMM D, YYYY'))
+        .replace('{{member_count}}', String(memberCount))
+        .replace('{{job_count}}', String(jobpostCount));
+
       return limit(() =>
-        sendEmail(subscriber.email, 'New Job Post Available', emailContent),
+        sendEmail(
+          sub.email,
+          `Your ${now.format('MMMM D')} update from PhDPort`,
+          content,
+        ),
       );
     }
     return Promise.resolve();
   });
-  await Promise.all(emailTasks);
 
-  return job;
+  await Promise.all(tasks);
 };
 
 const getAlljobPost = async (query: Record<string, any>) => {
@@ -140,4 +188,5 @@ export const jobPostService = {
   deletejobPost,
   getMyjobPostById,
   getJobPostByUserId,
+  sendDailyJobPostUpdate,
 };
