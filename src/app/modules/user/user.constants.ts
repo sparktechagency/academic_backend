@@ -8,4 +8,9 @@ export const USER_ROLE = {
 export const gender = ['Male', 'Female', 'Others'];
 export const Role = ['admin', 'super_admin', 'sub_admin', 'user'];
 
-export const userSearchableFields = ['name', 'researchInterest'];
+export const userSearchableFields = [
+  'name',
+  'researchInterest',
+  'affiliation',
+  'placeOfOrigin',
+];

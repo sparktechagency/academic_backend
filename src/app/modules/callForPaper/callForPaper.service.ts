@@ -14,7 +14,7 @@ const getAllcallForPaper = async (query: Record<string, any>) => {
     CallForPaper.find().populate('userId'),
     query,
   )
-    .search(['title'])
+    .search(['title', 'keywords', 'organizer', 'comment'])
     .filter()
     .paginate()
     .sort();

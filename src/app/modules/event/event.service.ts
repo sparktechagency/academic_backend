@@ -103,7 +103,7 @@ export const sendDailyEventUpdate = async () => {
 
 const getAllevent = async (query: Record<string, any>) => {
   const eventModel = new QueryBuilder(Event.find().populate('userId'), query)
-    .search(['title'])
+    .search(['title', 'organizer'])
     .filter()
     .paginate()
     .sort();

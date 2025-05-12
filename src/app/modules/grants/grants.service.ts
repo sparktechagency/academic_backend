@@ -103,7 +103,7 @@ const sendDailyGrantUpdate = async () => {
 
 const getAllgrants = async (query: Record<string, any>) => {
   const grantsModel = new QueryBuilder(Grants.find().populate('userId'), query)
-    .search(['name'])
+    .search(['name', 'generator', 'comment'])
     .filter()
     .paginate()
     .sort();
