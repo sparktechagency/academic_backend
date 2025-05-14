@@ -59,12 +59,22 @@ const sendDailyGrantUpdate = async () => {
   const yesterday = now.subtract(1, 'day').toDate();
 
   const newGrants = await Grants.find({ createdAt: { $gte: yesterday } });
-  const memberCount = await User.countDocuments({
+  const newMemberCount = await User.countDocuments({
     createdAt: { $gte: yesterday },
   });
-  const grantCount = newGrants.length;
 
-  if (grantCount === 0 && memberCount === 0) return; // Skip email if no updates
+  let grantCount = '';
+  let memberCount = '';
+
+  if (newGrants.length > 0) {
+    grantCount = String(newGrants.length);
+  }
+
+  if (newMemberCount > 0) {
+    memberCount = String(newMemberCount);
+  }
+
+  if (grantCount === '' && memberCount === '') return;
 
   const emailTemplatePath = path.join(
     __dirname,
@@ -74,7 +84,12 @@ const sendDailyGrantUpdate = async () => {
   if (!fs.existsSync(emailTemplatePath)) {
     throw new Error('Email template not found');
   }
-
+  const memberT = memberCount
+    ? `<li>Members: ${memberCount} new registered scholars</li>`
+    : ' ';
+  const grantT = grantCount
+    ? `<li>Grants :${grantCount}  new active listings</li>`
+    : ' ';
   const rawTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
   const subscribersList = await subscriber.find({ isSubscribed: true });
 
@@ -84,8 +99,8 @@ const sendDailyGrantUpdate = async () => {
       const content = rawTemplate
         .replace('{{first_name}}', sub.email.split('@')[0] || 'there')
         .replace('{{today_date}}', now.format('MMMM D, YYYY'))
-        .replace('{{member_count}}', String(memberCount))
-        .replace('{{job_count}}', String(grantCount));
+        .replace('{{member_count}}', String(memberT))
+        .replace('{{job_count}}', String(grantT));
 
       return limit(() =>
         sendEmail(

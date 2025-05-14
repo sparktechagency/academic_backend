@@ -74,7 +74,12 @@ export const sendDailyEventUpdate = async () => {
   if (!fs.existsSync(emailTemplatePath)) {
     throw new Error('Email template not found');
   }
-
+  const memberT = memberCount
+    ? `<li>Members: ${memberCount} new registered scholars</li>`
+    : ' ';
+  const eventCountT = eventCount
+    ? `<li>Event :${eventCount}  new active listings</li>`
+    : ' ';
   const rawTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
   const subscribersList = await subscriber.find({ isSubscribed: true });
 
@@ -84,8 +89,8 @@ export const sendDailyEventUpdate = async () => {
       const content = rawTemplate
         .replace('{{first_name}}', sub.email.split('@')[0] || 'there')
         .replace('{{today_date}}', now.format('MMMM D, YYYY'))
-        .replace('{{member_count}}', String(memberCount))
-        .replace('{{job_count}}', String(eventCount));
+        .replace('{{member_count}}', String(memberT))
+        .replace('{{job_count}}', String(eventCountT));
 
       return limit(() =>
         sendEmail(
