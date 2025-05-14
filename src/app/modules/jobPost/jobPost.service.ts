@@ -107,7 +107,7 @@ const getAlljobPost = async (query: Record<string, any>) => {
     JobPost.find().populate('userId'),
     query,
   )
-    .search(['title', 'institution', 'location', 'keywords'])
+    .search(['title', 'institution', 'location', 'keywords', 'job_description'])
     .filter()
     .paginate()
     .sort();
