@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   '/create-invitation',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   invitationController.createinvitation,
 );
 
