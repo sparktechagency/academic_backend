@@ -88,7 +88,7 @@ const getAllUser = async (query: Record<string, any>) => {
           coordinates: [parseFloat(longitude), parseFloat(latitude)],
         },
         key: 'location',
-        maxDistance: parseFloat(5 as unknown as string) * 1609,
+        maxDistance: parseFloat(50 as unknown as string) * 1609,
         distanceField: 'dist.calculated',
         spherical: true,
       },
