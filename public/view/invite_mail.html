@@ -1,103 +1,122 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <title>Join PhDPort – Invitation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      /* Global Styles */
+      @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
         margin: 0;
         padding: 0;
+        background-color: #f5f3ef;
+        font-family: 'Merriweather', serif;
+        color: #1e2d3b;
       }
+
       .container {
-        width: 100%;
-        padding: 20px;
-        background-color: #ffffff;
-      }
-      .email-body {
         max-width: 600px;
-        margin: 0 auto;
-        background-color: #ffffff;
-        border: 1px solid #e5e5e5;
-        padding: 30px;
-        border-radius: 8px;
-      }
-      .logo {
+        margin: 40px auto;
+        background-color: #fff;
+        border: 1px solid #dcd6cc;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(30, 45, 59, 0.05);
         text-align: center;
-        margin-bottom: 20px;
       }
-      .logo img {
-        width: 120px;
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
       }
+
+      .header img {
+        height: 50px;
+        margin-right: 12px;
+      }
+
+      .brand {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e2d3b;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 25px;
+      }
+
       .message {
-        font-size: 18px;
-        color: #333333;
-        margin-bottom: 20px;
-        text-align: left;
+        font-size: 16px;
+        color: #3b4b5e;
+        margin-bottom: 30px;
+        line-height: 1.5;
       }
-      .cta {
-        text-align: center;
-        margin-top: 30px;
-      }
-      .cta a {
+
+      .btn {
         display: inline-block;
-        font-size: 18px;
-        font-weight: bold;
-        color: #ffffff;
-        background-color: #28a745;
-        padding: 12px 20px;
-        border-radius: 5px;
+        background-color: #1e2d3b;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        padding: 15px 30px;
+        border-radius: 8px;
         text-decoration: none;
+        letter-spacing: 0.8px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 30px;
       }
+
+      .btn:hover {
+        background-color: #37495e;
+      }
+
+      .note {
+        font-size: 14px;
+        color: #777777;
+        margin-bottom: 30px;
+      }
+
       .footer {
-        font-size: 12px;
-        color: #999999;
-        text-align: center;
-        margin-top: 30px;
-      }
-      .footer a {
-        color: #28a745;
-        text-decoration: none;
+        font-size: 13px;
+        color: #999;
+        border-top: 1px dashed #ddd;
+        padding-top: 20px;
       }
     </style>
   </head>
+
   <body>
     <div class="container">
-      <div class="email-body">
-        <div class="logo">
-          <img
-            src="https://i.ibb.co/bjVCRB2z/phdportlogo-2.png"
-            alt="PhDPort Logo"
-          />
-        </div>
-        <div class="message">
-          <p>Dear {{email}},</p>
-          <p>
-            We’d love to invite you to join PhDPort, a platform designed to
-            connect academics across disciplines. Whether you’re searching for
-            job opportunities, grants, or simply want to network with
-            like-minded scholars, PhDPort makes it easy.
-          </p>
-          <p>Click below to sign up and start exploring:</p>
-        </div>
-        <div class="cta">
-          <a href="http://172.252.13.83:1212/signUp">Join Now</a>
-        </div>
-        <div class="message">
-          <p>
-            Please note: You can only sign up for the newsletter using the email
-            address this invitation was sent to.
-          </p>
-          <p>Looking forward to welcoming you to our community!</p>
-          <p>Best,</p>
-          <p>The PhDPort Team</p>
-        </div>
+      <div class="header">
+        <img src="/uploads/logo/logo.png" alt="PhDPort Logo" />
+        <div class="brand">PhDPort</div>
       </div>
+
+      <div class="greeting">Dear {{email}},</div>
+
+      <div class="message">
+        We’d love to invite you to join <strong>PhDPort</strong>, a platform designed to connect academics across disciplines. Whether you’re searching for job opportunities, grants, or simply want to network with like-minded scholars, PhDPort makes it easy.
+      </div>
+
+      <a href="{{join_link}}" class="btn" target="_blank" rel="noopener noreferrer">Join Now</a>
+
+      <div class="note">
+        Please note: You can only sign up for the newsletter using the email address this invitation was sent to.
+      </div>
+
+      <div class="message">
+        Looking forward to welcoming you to our community!
+      </div>
+
       <div class="footer">
-        <p>
-          If you have any questions, please
-          <a href="mailto:phdportinc@gmail.com">contact support</a>.
-        </p>
+        Best,<br />
+        The PhDPort Team
       </div>
     </div>
   </body>

@@ -1,97 +1,139 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <title>Verify Your Email – PhDPort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      /* Global Styles */
+      @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
         margin: 0;
         padding: 0;
+        background-color: #f5f3ef;
+        font-family: 'Merriweather', serif;
+        color: #1e2d3b;
       }
+
       .container {
-        width: 100%;
-        padding: 20px;
-        background-color: #ffffff;
-      }
-      .email-body {
         max-width: 600px;
-        margin: 0 auto;
+        margin: 40px auto;
         background-color: #ffffff;
-        border: 1px solid #e5e5e5;
-        padding: 30px;
-        border-radius: 8px;
+        border: 1px solid #dcd6cc;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(30, 45, 59, 0.05);
       }
-      .logo {
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+
+      .header img {
+        height: 50px;
+        margin-right: 12px;
+      }
+
+      .brand {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e2d3b;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .divider {
+        height: 2px;
+        width: 100%;
+        background: linear-gradient(to right, #b2bec3, #dfe6e9);
+        margin: 20px 0 30px;
+      }
+
+      .title {
+        font-size: 22px;
         text-align: center;
-        margin-bottom: 20px;
-      }
-      .logo img {
-        width: 120px;
-      }
-      .otp-message {
-        font-size: 18px;
-        color: #333333;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-      .otp-code {
-        display: inline-block;
-        font-size: 24px;
         font-weight: bold;
-        color: #fe6201;
-        background-color: #ffa1131f;
-        padding: 10px 20px;
-        border-radius: 5px;
+        color: #1e2d3b;
       }
-      .cta {
+
+      .message {
+        font-size: 16px;
+        color: #3b4b5e;
         text-align: center;
-        margin-top: 30px;
+        margin: 20px 0 30px;
+        line-height: 1.6;
       }
+
+      .otp-box {
+        background-color: #f9f7f4;
+        border: 1px solid #ccc5b9;
+        border-radius: 8px;
+        padding: 18px 25px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #2d3436;
+        text-align: center;
+        letter-spacing: 6px;
+        max-width: 280px;
+        margin: 0 auto 25px;
+      }
+
+      .instruction {
+        font-size: 14px;
+        color: #777777;
+        text-align: center;
+        margin-top: 10px;
+      }
+
       .footer {
-        font-size: 12px;
-        color: #999999;
         text-align: center;
-        margin-top: 30px;
+        font-size: 13px;
+        color: #999;
+        margin-top: 40px;
+        border-top: 1px dashed #ddd;
+        padding-top: 20px;
       }
-      .footer a {
-        color: #fe6201;
-        text-decoration: none;
+
+      .quote {
+        font-style: italic;
+        font-size: 14px;
+        color: #666;
+        margin-top: 10px;
       }
     </style>
   </head>
+
   <body>
     <div class="container">
-      <div class="email-body">
-        <div class="logo">
-          <img
-            src="https://i.ibb.co/bjVCRB2z/phdportlogo-2.png"
-            alt="PhDPort"
-          />
-        </div>
-        <div class="otp-message">
-          <p>{{email}}</p>
-          <p>
-            Your One-Time Password (OTP) to verify your account on JusBuy is:
-          </p>
-          <p class="otp-code">{{otp}}</p>
-          <p>
-            This code is valid for 3 minutes. Please do not share this code with
-            anyone.
-          </p>
-        </div>
-        <div class="cta">
-          <p>Thank you for choosing JusBuy!</p>
-          <p>
-            <a href="PhDPort" style="color: #fe6201">Visit our website</a>
-          </p>
-        </div>
+      <div class="header">
+        <img src="/uploads/logo/logo.png" alt="PhDPort Logo" />
+        <div class="brand">PhDPort</div>
       </div>
+
+      <div class="divider"></div>
+
+      <div class="title">Email Verification</div>
+
+      <div class="message">
+        Welcome to <strong>PhDPort</strong>, your academic management companion.<br />
+        Please use the verification code below to confirm your email address and access the platform.
+      </div>
+
+      <div class="otp-box">{{otp}}</div>
+
+      <div class="instruction">
+        This code is valid for the next 03 minutes.<br />
+        If you did not initiate this request, please disregard this email.
+      </div>
+
       <div class="footer">
-        <p>
-          If you didn’t request this OTP, please
-          <a href="PhDPort">contact support</a>.
-        </p>
+        &copy; 2025 PhDPort – All Rights Reserved. <br />
+        <div class="quote">
+          "Guiding researchers, supporting institutions, building futures."
+        </div>
       </div>
     </div>
   </body>

@@ -1,30 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    ...
+    <meta charset="UTF-8" />
+    <title>Daily Update from PhDPort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f3ef;
+        font-family: 'Merriweather', serif;
+        color: #1e2d3b;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border: 1px solid #dcd6cc;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(30, 45, 59, 0.05);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        font-size: 24px;
+        color: #1e2d3b;
+        letter-spacing: 1.2px;
+      }
+
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+
+      .intro {
+        font-size: 16px;
+        color: #3b4b5e;
+        margin-bottom: 25px;
+        line-height: 1.5;
+      }
+
+      .stats {
+        background-color: #f9f7f4;
+        border: 1px solid #ccc5b9;
+        border-radius: 8px;
+        padding: 20px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d3436;
+        text-align: center;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+      }
+
+      .footer {
+        font-size: 13px;
+        color: #999999;
+        text-align: center;
+        border-top: 1px dashed #ddd;
+        padding-top: 20px;
+      }
+
+      a.unsubscribe {
+        color: #999999;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    </style>
   </head>
+
   <body>
-    <div class="email-container">
+    <div class="container">
       <div class="header">🎓 Daily Update from PhDPort</div>
-      <div class="content">
-        <p>Hi {{first_name}},</p>
-        <p>
-          Welcome to your {{today_date}} update from PhDPort! Here's what's new
-          in our academic community over the past 24 hours.
-        </p>
-        <!-- <p><strong>Key Statistics (as of {{today_date}}):</strong></p> -->
-        <ul>
-          {{member_count}} {{job_count}}
-        </ul>
-        <p>
-          If you have suggestions or need help, just reply to this email. We’re
-          here to support your research journey!
-        </p>
-        <p>Best regards,<br />The PhDPort Team</p>
-        <p class="footer">
-          You’re receiving this because you signed up at PhDPort. If you’d
-          rather not get updates, you can <a href="#">unsubscribe here</a>.
-        </p>
+
+      <div class="greeting">Hi {{first_name}},</div>
+
+      <div class="intro">
+        Welcome to your <strong>{{today_date}}</strong> update from PhDPort! Here's what's new in our academic community over the past 24 hours.
+      </div>
+
+      <div class="stats">
+        <div><strong>{{member_count}}</strong> new members joined</div>
+        <div><strong>{{job_count}}</strong> new job postings</div>
+      </div>
+
+      <div class="intro">
+        If you have suggestions or need help, just reply to this email. We’re here to support your research journey!
+      </div>
+
+      <div class="footer">
+        Best regards,<br />
+        The PhDPort Team<br /><br />
+        You’re receiving this because you signed up at PhDPort.<br />
+        If you’d rather not get updates, you can
+        <a href="#" class="unsubscribe">unsubscribe here</a>.
       </div>
     </div>
   </body>
