@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   '/create-make_folder',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   make_folderController.createmake_folder,
 );
 
@@ -16,7 +16,7 @@ router.patch('/update/:id', make_folderController.updatemake_folder);
 router.delete('/:id', make_folderController.deletemake_folder);
 router.get(
   '/my-make_folder',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   make_folderController.getMyFolders,
 );
 router.get('/public/:userId', make_folderController.getPublicFoldersByUserId);

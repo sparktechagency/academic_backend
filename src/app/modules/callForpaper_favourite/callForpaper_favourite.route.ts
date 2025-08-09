@@ -28,7 +28,7 @@ router.delete(
 
 router.get(
   '/my-callForpaper_favourite',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   callForpaper_favouriteController.getMycallForpaper_favouriteById,
 );
 
