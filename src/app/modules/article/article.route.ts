@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   '/create-article',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   articleController.createarticle,
 );
 router.get('/folder/:id', articleController.getArticlesByFolderId);
